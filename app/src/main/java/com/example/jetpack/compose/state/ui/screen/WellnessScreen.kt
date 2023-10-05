@@ -2,6 +2,7 @@ package com.example.jetpack.compose.state.ui.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -20,14 +21,30 @@ fun WaterCounter(modifier: Modifier = Modifier) {
         var count by  remember { mutableStateOf(0) }
 
         if(count>0) {
+            var showTask by remember { mutableStateOf(true) }
+            if (showTask) {
+                WellnessTaskItem(
+                    onClose = { showTask = false},
+                    taskName = "Have you taken your 15 minute walk today?"
+                )
+            }
             Text(text = "You have had ${count} glasses water today")
         }
 
-        Button(onClick = { count++ },
-            modifier = Modifier.padding(top = 8.dp),
-            enabled = count< 10
-        ) {
-            Text(text = "Add one")
+        Row(Modifier.padding(top = 8.dp)) {
+            Button(onClick = { count++ },
+                modifier = Modifier.padding(top = 8.dp),
+                enabled = count< 10
+            ) {
+                Text(text = "Add one")
+            }
+
+            Button(
+                onClick = { count = 0 },
+                Modifier.padding(start = 8.dp)) {
+                Text("Clear water count")
+            }
         }
+
     }
 }
