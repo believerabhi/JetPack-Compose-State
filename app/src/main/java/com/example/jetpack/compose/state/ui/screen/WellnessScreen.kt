@@ -11,13 +11,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+private fun getWellnessTasks() = List(30) { i -> WellnessTask(i, "Task # $i") }
+
 @Composable
 fun WellnessScreen(modifier: Modifier = Modifier) {
    //WaterCounter()
    // StatefulCounter(modifier)
     Column(modifier = modifier) {
         StatefulCounter()
-        WellnessTasksList()
+        val list = remember { getWellnessTasks().toMutableStateList() }
+        WellnessTasksList(list = list, onCloseTask = {task -> list.remove(task)} )
     }
 }
 
@@ -51,7 +54,8 @@ fun WaterCounter(modifier: Modifier = Modifier) {
             var showTask by remember { mutableStateOf(true) }
             if (showTask) {
                 WellnessTaskItem(
-                    taskName = "Have you taken your 15 minute walk today?"
+                    taskName = "Have you taken your 15 minute walk today?",
+                    onClose = {}
                 )
             }
             Text(text = "You have had ${count} glasses water today")

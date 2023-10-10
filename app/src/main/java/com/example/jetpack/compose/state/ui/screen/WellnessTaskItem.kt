@@ -13,32 +13,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-private fun getWellnessTasks() = List(30) { i -> WellnessTask(i, "Task # $i") }
+//private fun getWellnessTasks() = List(30) { i -> WellnessTask(i, "Task # $i") }
 data class WellnessTask(val id: Int, val label: String)
 
 @Composable
 fun WellnessTasksList(
     modifier: Modifier = Modifier,
-    list: List<WellnessTask> = remember { getWellnessTasks() }
+    list: List<WellnessTask> ,
+    onCloseTask :(WellnessTask)-> Unit
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        items(list) { task ->
-            WellnessTaskItem(taskName = task.label)
+        items(items = list,
+            key = {task -> task.id}
+        ) { task ->
+            WellnessTaskItem(taskName = task.label, onClose = {onCloseTask(task)})
         }
     }
 }
 
 @Composable
-fun WellnessTaskItem(taskName: String, modifier: Modifier = Modifier) {
+fun WellnessTaskItem(taskName: String, modifier: Modifier = Modifier,
+                     onClose :()-> Unit) {
     var checkedState by rememberSaveable { mutableStateOf(false) }
 
     WellnessTaskItem(
         taskName = taskName,
         checked = checkedState,
         onCheckedChange = { newValue -> checkedState = newValue },
-        onClose = {}, // we will implement this later!
+        onClose = onClose,
         modifier = modifier,
     )
 }
