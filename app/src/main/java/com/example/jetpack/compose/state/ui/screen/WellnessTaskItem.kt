@@ -14,13 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 //private fun getWellnessTasks() = List(30) { i -> WellnessTask(i, "Task # $i") }
-data class WellnessTask(val id: Int, val label: String)
+class WellnessTask(val id: Int, val label: String, var initialChecked: Boolean = false) {
+    var checked by mutableStateOf(initialChecked)
+}
 
 @Composable
 fun WellnessTasksList(
     modifier: Modifier = Modifier,
     list: List<WellnessTask> ,
-    onCloseTask :(WellnessTask)-> Unit
+    onCloseTask :(WellnessTask)-> Unit,
+    onCheckedTask : (WellnessTask, Boolean)->Unit
 ) {
     LazyColumn(
         modifier = modifier
@@ -28,7 +31,15 @@ fun WellnessTasksList(
         items(items = list,
             key = {task -> task.id}
         ) { task ->
-            WellnessTaskItem(taskName = task.label, onClose = {onCloseTask(task)})
+           // WellnessTaskItem(taskName = task.label, onClose = {onCloseTask(task)})
+
+            WellnessTaskItem(
+                taskName = task.label,
+                checked = task.checked,
+                onCheckedChange = { checked -> onCheckedTask(task, checked) },
+                onClose = { onCloseTask(task)},
+                modifier = modifier,
+            )
         }
     }
 }
